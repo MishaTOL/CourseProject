@@ -1,7 +1,7 @@
 # CourseProject
 ITNews Blog
 
-ITNews site (for creating and publishing news)
+ITNews site (for creating and publishing news).
 Thematic online newspaper, where users can read, create and publish posts.
 Each user has his personal page on which he manages a list of his news
 (table with filtering and sorting, the ability to create / delete / edit news), fields with information about yourself (in-place editing).
