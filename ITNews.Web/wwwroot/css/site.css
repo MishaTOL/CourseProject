@@ -1,0 +1,133 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+
+.tagcloud {
+    z-index: 100 !important;
+    background-color: #e7f5f7;
+    padding: 25px;
+    height: 500px;
+    width: 100%;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+    .tagcloud a {
+        text-decoration: none;
+        padding: 5px;
+    }
+
+.linkLevel-1 {
+    font-size: 10pt;
+}
+
+.linkLevel-2 {
+    font-size: 11pt;
+}
+
+.linkLevel-3 {
+    font-size: 13pt;
+}
+
+.linkLevel-4 {
+    font-size: 15pt;
+}
+
+.linkLevel-5 {
+    font-size: 18pt;
+}
+
+.linkLevel-6 {
+    font-size: 20pt;
+}
+
+.linkLevel-7 {
+    font-size: 22pt;
+}
+
+.profilePic {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.rating {
+    float: left;
+}
+
+    .rating:not(:checked) > input {
+        position: absolute;
+        top: -9999px;
+        clip: rect(0,0,0,0);
+    }
+    .rating:not(:checked) > label {
+        float: right;
+        width: 1em;
+        padding: 0 .1em;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        font-size: 3em;
+        line-height: 1.2;
+        color: #e0e0e0;
+    }
+
+        .rating:not(:checked) > label:before {
+            font-family: FontAwesome;
+            content: "\f005";
+        }
+
+    .rating > input:checked ~ label {
+        color: #fa0;
+    }
+
+    .rating:not(:checked) > label:hover,
+    .rating:not(:checked) > label:hover ~ label {
+        color: #fe0;
+    }
+
+    .rating > input:checked + label:hover,
+    .rating > input:checked + label:hover ~ label,
+    .rating > input:checked ~ label:hover,
+    .rating > input:checked ~ label:hover ~ label,
+    .rating > label:hover ~ input:checked ~ label {
+        color: #ea0;
+    }

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<ITNews.Core.Domain.Post>
+@inject ITNews.Services.Posts.IPostService postService
+@inject ITNews.Services.Users.IUserService userService
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            @if (User.Identity.IsAuthenticated)
+            {
+
+                var user = await userService.GetUserByUserNameAsync(User.Identity.Name);
+                if (user.ProfilePictureUrl != null)
+                {
+                    <img class="profilePic" src="@user.ProfilePictureUrl" />
+                }
+                else
+                {
+                    <img class="profilePic" src="/uploads/profiles/default.jpg" />
+                }
+
+                <a asp-controller="Profile" asp-action="Index" asp-route-username="@User.Identity.Name">@User.Identity.Name</a>
+                <form method="post" asp-controller="Account" asp-action="LogOff">
+                    <input type="submit" class="btn btn-sm btn-warning" value="Log Out" />
+                </form>
+            }
+            else
+            {
+                <div><a asp-controller="Account" asp-action="Login">Log In</a></div>
+                <div><a asp-controller="Account" asp-action="Register">Registration</a></div>
+            }
+
+            @if (User.IsInRole("admin"))
+            {
+                <div><a asp-controller="Users" asp-action="Index">User Managment</a></div>
+                <div><a asp-controller="Roles" asp-action="Index">Roles Managment</a></div>
+            }
+        </div>
+        <div class="col-md-4">
+            <h3>Top Rated posts :</h3>
+            <div class="form-group">
+                @{
+                    var posts = postService.GetAllPostsOrderedByRating();
+                    foreach (var post in posts)
+                    {
+                    <div id="postBlock" class="form-group">
+                        <span>Author : </span><a asp-controller="Profile" asp-action="Index" asp-route-username="@post.CreatedBy.UserName">@post.CreatedBy.UserName</a>
+                        <p class="text-uppercase lead">@post.PostName</p>
+                        <p class="lead">Description : @post.Description</p>
+                        @foreach (var tag in post.PostTags.Select(x => x.Tag))
+                        {
+                            <span class="label label-default">@tag.Name</span>
+                        }
+                        <p class="text-muted "><small> Date of Creation : @post.CreatedOn </small></p>
+                        <input type="submit" class="btn btn-primary" value="Read Post" onclick="location.href='@Url.Action("Index", "Post", new { postId = post.Id })'" />
+                    </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @if (Model.Count() != 0)
+                {
+                    foreach (var post in Model)
+                    {
+                    <div id="postBlock" class="form-group">
+                        <span>Author : </span><a asp-controller="Profile" asp-action="Index" asp-route-username="@post.CreatedBy.UserName">@post.CreatedBy.UserName</a>
+                        <p class="text-uppercase lead">@post.PostName</p>
+                        <p class="lead">Description : @post.Description</p>
+                        @foreach (var tag in post.PostTags.Select(x => x.Tag))
+                        {
+                            <span class="label label-default">@tag.Name</span>
+                        }
+                        <p class="text-muted "><small> Date of Creation : @post.CreatedOn </small></p>
+                        <input type="submit" class="btn btn-primary" value="Read Post" onclick="location.href='@Url.Action("Index", "Post", new { postId = post.Id })'" />
+                    </div>
+                    }
+                }
+                else
+                {
+                    <p> No posts yet.</p>
+                }
+            </div>
+        </div>
+        <div class="col-md-2">
+            @await Component.InvokeAsync("TagCloud")
+        </div>
+    </div>
+</div>

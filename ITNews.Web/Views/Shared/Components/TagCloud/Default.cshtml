@@ -1,0 +1,37 @@
+﻿@using ITNews.Core.Domain
+@model IEnumerable<Tag>
+@{
+    ViewData["Title"] = "Default";
+}
+
+@if (Model.Any())
+{
+<div>
+    @foreach (var tag in Model)
+    {
+        if (tag.Weight < 10)
+        {
+            <a class="linkLevel-3" asp-controller="Post" asp-action="PostsByTag" asp-route-tagId="@tag.Id">@tag.Name</a>
+        }
+        else if (tag.Weight < 20)
+        {
+            <a class="linkLevel-4" asp-controller="Post" asp-action="PostsByTag" asp-route-tagId="@tag.Id">@tag.Name</a>
+        }
+        else if (tag.Weight < 30)
+        {
+            <a class="linkLevel-5" asp-controller="Post" asp-action="PostsByTag" asp-route-tagId="@tag.Id">@tag.Name</a>
+        }
+        else if (tag.Weight < 40)
+        {
+            <a class="linkLevel-6" asp-controller="Post" asp-action="PostsByTag" asp-route-tagId="@tag.Id">@tag.Name</a>
+        }
+        else
+        {
+            <a class="linkLevel-7" asp-controller="Post" asp-action="PostsByTag" asp-route-tagId="@tag.Id">@tag.Name</a>
+        }
+    }
+</div>
+}
+
+
+

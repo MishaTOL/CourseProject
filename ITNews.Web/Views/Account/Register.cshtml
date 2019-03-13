@@ -1,0 +1,52 @@
+﻿@model ITNews.Web.ViewModels.Account.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="form">
+    <h2>Register a new account</h2>
+    <form method="post" asp-controller="Account" asp-action="Register" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <div class="form-group">
+                <input type="text" placeholder="User Name" asp-for="UserName" class="form-control" required />
+                <span asp-validation-for="UserName"></span>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email" asp-for="EmailAddress" class="form-control" required />
+                <span asp-validation-for="EmailAddress"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="First Name" asp-for="FirstName" class="form-control" required />
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Last Name" asp-for="LastName" class="form-control" required />
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" asp-for="Password" class="form-control" required />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Confirm Password" asp-for="ConfirmPassword" class="form-control" required />
+                <span asp-validation-for="ConfirmPassword"></span>
+            </div>
+        </div>    
+        <div class="form-group">
+            <div class="form-group">
+                <span>Upload a profile picture</span>
+                <input type="file" id="file" class="" accept="image/*" asp-for="File" />
+                @*<label for="file"><i class="fa fa-user"></i>&nbsp; </label>*@
+            </div>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-success btn-block btn-lg" value="Register"/>
+        </div>
+    </form>
+    
+    <div class="text-center">
+        <p>Already a member? <a asp-action="Login">Login</a></p>
+    </div>
+</div>
+

@@ -1,0 +1,118 @@
+﻿@inject IHttpContextAccessor httpContextAccessor
+@inject ITNews.Services.Users.IUserService userService
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITNews.Web</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/jquery-ui.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/mdeditor.css" />
+        @*<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>*@
+        <link rel="stylesheet" href="~/css/bootstrap-editable.css" />
+        @*<link rel="stylesheet" href="~/raiting/css/light/all.min.css" />*@
+        <link rel="stylesheet" href="~/fontawesome/css/fontawesome.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @RenderSection("css", required: false)
+    @{
+        if (httpContextAccessor.HttpContext.Request.Cookies.ContainsKey("theme"))
+        {
+            var theme = httpContextAccessor.HttpContext.Request.Cookies["theme"].ToString();
+            if (theme != null && theme == "Light")
+            {
+                <link rel="stylesheet" href="~/css/light.css" />
+            }
+            if (theme != null && theme == "Dark")
+            {
+                <link rel="stylesheet" href="~/css/dark.css" />
+            }
+        }
+    }
+    
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1">
+                    <a class="btn btn-sm btn-primary" asp-controller="Home" asp-action="Index">Home</a>
+                </div>
+                <div class="col-md-4">
+                    @{
+                        var user = await userService.GetUserByUserNameAsync(User.Identity.Name);
+                        if (user != null && !user.EmailConfirmed)
+                        {
+                            <p>Please, confirm your account Email.</p>
+                        }
+                        if (user != null && !(User.IsInRole("reader") || User.IsInRole("writer") || User.IsInRole("admin")))
+                        {
+                            <p class="text-danger">Your account was blocked by admin.</p>
+                        }
+                    }
+                </div>
+                <div class="col-md-5">
+                    <form class="form-inline" method="post" action="/Post/PostsByName">
+                        <input type="text" name="searchWord" placeholder="Search Post" class="form-control"/>
+                        <input type="submit" class="btn btn-primary btn-sm" value="Search" />
+                    </form>
+                </div>
+                <div class="col-md-2">
+                    <select name="theme" id="theme" class="form-control">
+                        <option value="0">Change Theme</option>
+                        <option value="1">Dark</option>
+                        <option value="2">Light</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2019 - ITNews.Web</p>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-ui/jquery-ui.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/bootstrap-editable.min.js"></script>
+        <script src="~/js/mdeditor.min.js"></script>
+        <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+        <script src="~/raiting/js/shieldui-all.min.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <ejs-scripts></ejs-scripts>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

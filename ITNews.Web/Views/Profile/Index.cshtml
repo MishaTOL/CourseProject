@@ -1,0 +1,195 @@
+﻿@inject ITNews.Services.Posts.IPostService postService
+@inject ITNews.Services.Users.IUserService userService
+@model ITNews.Web.ViewModels.Profile.ProfileViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css {
+    <style>
+        #SearchInput {
+            background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+            background-position: 10px 12px; /* Position the search icon */
+            background-repeat: no-repeat; /* Do not repeat the icon image */
+            width: 100%; /* Full-width */
+            font-size: 16px; /* Increase font-size */
+            padding: 12px 20px 12px 40px; /* Add some padding */
+            border: 1px solid #ddd; /* Add a grey border */
+            margin-bottom: 12px; /* Add some space below the input */
+        }
+
+        table {
+            border-collapse: collapse; /* Collapse borders */
+            width: 100%; /* Full-width */
+            border: 1px solid #ddd; /* Add a grey border */
+            font-size: 18px; /* Increase font-size */
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+        }
+    </style>
+}
+
+<div>
+    <img class="profilePic" src="@Model.ProfilePictureUrl" />
+</div>
+<p>@Model.UserName</p>
+<p>@Model.Email</p>
+@await Component.InvokeAsync("UserRating", Model.Id)
+<div>
+    <label>Description : </label>
+    <a href="#" id="description" data-type="textarea" data-pk="@Model.Id"
+       data-url="@Url.Action("ChangeDescriptionField", "Profile", new { Model.Id})"
+       data-title="Enter description">@Model.Description</a>
+</div>
+<div>
+    <label>From : </label>
+    <a href="#" id="from" data-type="text" data-pk="@Model.Id"
+       data-url="@Url.Action("ChangeFromField", "Profile", new { Model.Id})"
+       data-title="Enter From">@Model.From</a>
+</div>
+<div>
+    <label>Lives : </label>
+    <a href="#" id="lives" data-type="text" data-pk="@Model.Id"
+       data-url="@Url.Action("ChangeLivesField", "Profile", new { Model.Id})"
+       data-title="Enter From">@Model.Lives</a>
+</div>
+<div>
+    <label>Work at : </label>
+    <a href="#" id="workAt" data-type="text" data-pk="@Model.Id"
+       data-url="@Url.Action("ChangeWorkAtField", "Profile", new { Model.Id})"
+       data-title="Enter From">@Model.WorkAt</a>
+</div>
+@if (User.Identity.Name == Model.UserName && (User.IsInRole("writer") || User.IsInRole("admin")))
+{
+    <form method="get" asp-controller="Post" asp-action="Create">
+        <input type="submit" class="btn btn-warning" value="Create Post" />
+    </form>
+}
+
+<div>
+    <input type="text" id="SearchInput" onkeyup="SearchFunction()" placeholder="Search for Post names..">
+    <table id="PostList">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">PostName</th>
+                <th onclick="sortTable(1)">Description</th>
+                <th onclick="sortTable(2)">Tags</th>
+                <th onclick="sortTable(3)">Post Type</th>
+                @if ((User.Identity.Name == Model.UserName && User.IsInRole("writer")) || User.IsInRole("admin"))
+                {
+                    <th>Actions</th>
+                }
+                </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td><p>@post.PostName</p></td>
+                    <td><p>@post.Description</p></td>
+                    <td>
+                        @foreach (var tag in post.PostTags.Select(x => x.Tag))
+                        {
+                            <p>@tag.Name</p>
+                        }
+                    </td>
+                    <td><p>@post.PostType</p></td>
+                    @if (User.Identity.Name == Model.UserName || User.IsInRole("admin"))
+                    {
+                    <td>
+                        <a class="btn btn-sm btn-primary" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                    </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    @if (User.Identity.Name == Model.UserName)
+    {
+        <script>
+            $.fn.editable.defaults.mode = 'inline';
+            $(document).ready(function () {
+                $('#description').editable();
+            });
+            $(document).ready(function () {
+                $('#from').editable();
+            });
+            $(document).ready(function () {
+                $('#lives').editable();
+            });
+            $(document).ready(function () {
+                $('#workAt').editable();
+            });
+        </script>
+    }
+
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("PostList");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function SearchFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("SearchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("PostList");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+}

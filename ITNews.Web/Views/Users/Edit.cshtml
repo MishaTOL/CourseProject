@@ -1,0 +1,47 @@
+﻿@model  ITNews.Web.ViewModels.Users.EditUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<form asp-controller="Users" asp-action="Edit">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div>
+        <input type="hidden" asp-for="Id" />
+    </div>
+    <div>
+        <input type="text" placeholder="User Name" asp-for="UserName" required />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <input type="email" placeholder="Email" asp-for="EmailAddress" required />
+        <span asp-validation-for="EmailAddress"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="First Name" asp-for="FirstName" required />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="Last Name" asp-for="LastName" required />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="Description" asp-for="Description" />
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="Lives" asp-for="Lives" />
+        <span asp-validation-for="Lives"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="From" asp-for="From" />
+        <span asp-validation-for="From"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="Work At" asp-for="WorkAt" />
+        <span asp-validation-for="WorkAt"></span>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-success btn-block btn-lg" value="Save" />
+    </div>
+</form>
+

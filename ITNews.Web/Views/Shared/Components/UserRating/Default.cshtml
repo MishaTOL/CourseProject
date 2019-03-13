@@ -1,0 +1,54 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Default";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <input hidden id="ratingValue" value="" />
+    <label class="p-0 rating" id="star1" data-value="1" onclick="getRatingElemId(star1)">
+        1<span class="fa fa-star"></span>
+    </label>
+    <label class="p-0 rating" id="star2" data-value="2" onclick="getRatingElemId(star2)">
+        2<span class="fa fa-star"></span>
+    </label>
+    <label class="p-0 rating" id="star3" data-value="3" onclick="getRatingElemId(star3)">
+        3<span class="fa fa-star"></span>
+    </label>
+    <label class="p-0 rating" id="star4" data-value="4" onclick="getRatingElemId(star4)">
+        4<span class="fa fa-star"></span>
+    </label>
+    <label class="p-0 rating" id="star5" data-value="5" onclick="getRatingElemId(star5)">
+        5<span class="fa fa-star"></span>
+    </label>
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            var rating = @Model;
+            for (var i = 1; i <= 5; i++) {
+                if (i <= rating)
+                {
+                    $('#star' + i).addClass('checked');
+                }
+                else
+                {
+                    $('#star' + i).removeClass('checked');
+                }
+            }
+        </script>
+    }
+    else
+    {
+        <script>$('.rating').off('click');</script>
+    }
+</div>
+
+
+
+

@@ -1,0 +1,63 @@
+﻿@model ITNews.Web.ViewModels.Posts.PostViewModel
+@inject ITNews.Services.Users.IUserService userService
+@inject ITNews.Services.Posts.IPostService postService
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>@Model.CreatedBy.UserName</p>
+<input id="sourceMdArea" type="hidden" value="@Model.Content"/>
+<div id="targetMdArea"></div>
+<div id="ratingComponent">
+    @await Component.InvokeAsync("PostRating", Model.Id)
+</div>
+<div id="commentsList" onchange="addLikeEventListener()">
+    @if (postService.GetCommentsByPostId(Model.Id) != null)
+    {
+        @foreach (var comment in postService.GetCommentsByPostId(Model.Id))
+        {
+            <p class="lead">@comment.CommentBy.UserName</p>
+            <p>@comment.Content</p>
+            <input type="hidden" id="commentId-@comment.Id" value="@comment.Id" />
+            <div id="likeButtonBlock">
+                <button type="button" id="@comment.Id" name="likeButton" class="btn btn-sm btn-info" value="Like" onclick="getElemId(@comment.Id)">Like <span id="likesCount-@comment.Id">@comment.Likes.Count()</span></button>
+            </div>
+            @*<div id="likesCountDiv">
+                <p id="likesCount-@comment.Id">@comment.Likes.Count()</p>
+            </div>*@
+        }
+    }
+</div>
+
+@if (User.Identity.IsAuthenticated && (User.IsInRole("reader") || User.IsInRole("writer") || User.IsInRole("admin")))
+{
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <input type="hidden" id="userName" value="@User.Identity.Name" />
+                <input type="hidden" id="postId" value="@Model.Id" />
+                Comment <input type="text" id="commentInput" />
+                <input type="button" id="sendButton" class="btn btn-primary" value="Send" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/comment.js"></script>
+<script src="~/js/like.js"></script>
+<script src="~/js/rate.js"></script>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/showdown-1.9.0/dist/showdown.min.js"></script>
+<script src="~/js/markdownEditor.js"></script>
+<script>
+    showMdPreview();
+</script>

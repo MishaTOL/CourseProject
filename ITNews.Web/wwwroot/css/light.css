@@ -1,0 +1,24 @@
+﻿body{
+    background-color:aliceblue;
+}
+p, #targetMdArea {
+    color: steelblue;
+}
+
+h1, h2, h3, h4, h5, h6, a {
+    color: steelblue;
+}
+
+#postBlock {
+    border-color: steelblue;
+    border-width: 1px;
+    border-style: solid;
+    padding:10px;
+}
+
+#likeButtonBlock {
+    padding-bottom: 10px;
+    border-bottom-color: steelblue;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}

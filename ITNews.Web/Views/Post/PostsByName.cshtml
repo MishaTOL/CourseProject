@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ITNews.Core.Domain.Post>
+@inject ITNews.Services.Posts.IPostService postService
+@{
+    ViewData["Title"] = "PostsByName";
+}
+
+<h2>PostsByName</h2>
+
+<div class="form-group">
+    @if (Model.Count() != 0)
+    {
+        foreach (var post in Model)
+        {
+        <div id="postBlock" class="form-group">
+            <span>Author : </span><a asp-controller="Profile" asp-action="Index" asp-route-username="@post.CreatedBy.UserName">@post.CreatedBy.UserName</a>
+            <p class="text-uppercase lead">@post.PostName</p>
+            <p class="lead">Description : @post.Description</p>
+            @foreach (var tag in post.PostTags.Select(x => x.Tag))
+            {
+                <span class="label label-default">@tag.Name</span>
+            }
+            <p class="text-muted "><small> Date of Creation : @post.CreatedOn </small></p>
+            <input type="submit" class="btn btn-primary" value="Read Post" onclick="location.href='@Url.Action("Index", "Post", new { postId = post.Id })'" />
+</div>
+        }
+    }
+    else
+    {
+        <p> No posts yet.</p>
+    }
+</div>

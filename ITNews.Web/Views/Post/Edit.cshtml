@@ -1,0 +1,67 @@
+﻿@using ITNews.Core.Domain
+@model ITNews.Web.ViewModels.Posts.EditPostViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    .e-richtexteditor textarea.e-content {
+        float: left;
+    }
+
+    .e-richtexteditor .e-rte-content {
+        overflow: hidden;
+    }
+
+    .e-icon-btn.e-active .e-md-preview::before {
+        content: '\e350';
+    }
+
+    .e-icon-btn .e-md-preview::before {
+        content: '\e345';
+    }
+</style>
+
+
+<form asp-controller="Post" asp-action="Edit">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div>
+        <input type="hidden" asp-for="Id" />
+    </div>
+    <div>
+        <input type="hidden" asp-for="CreatedById" />
+    </div>
+    <div>
+        <input type="text" placeholder="Post Name" asp-for="PostName" required />
+        <span asp-validation-for="PostName"></span>
+    </div>
+    <div>
+        <select asp-for="PostType" asp-items="Html.GetEnumSelectList<PostType>()"></select>
+    </div>
+    <div>
+        <input type="text" placeholder="Description" asp-for="Description" required />
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <textarea id="sourceMdArea" oninput="showMdPreview()" type="text" class="form-control form-control-sm mw-100" style="height: 300px" placeholder="Content" asp-for="Content" required></textarea>
+        <div id="targetMdArea"></div>
+        <span asp-validation-for="Content"></span>
+    </div>
+    <div>
+        <input type="text" placeholder="Tags" asp-for="Tags" />
+        <span asp-validation-for="Tags"></span>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-success btn-block btn-lg" value="Save" />
+    </div>
+</form>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/showdown-1.9.0/dist/showdown.min.js"></script>
+<script src="~/js/markdownEditor.js"></script>
+<script src="~/js/DragNDrop.js"></script>
+<script>
+    var dragNDrop = new DragNDrop("sourceMdArea");
+    dragNDrop.create();
+    showMdPreview();
+</script>
